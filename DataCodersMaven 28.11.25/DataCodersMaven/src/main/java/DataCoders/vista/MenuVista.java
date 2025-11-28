@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class MenuVista {
+/*public class MenuVista {
     // === Almacén en memoria ===
     private final ArrayList<Articulo> articulos = new ArrayList<>();
     private final ArrayList<Cliente> clientes = new ArrayList<>();
@@ -114,65 +114,85 @@ public class MenuVista {
 
         sc.close();
     }
+*/
+    public class MenuVista {
 
-    private void anadirArticulo(Scanner sc) {
+        public static void main(String[] args) {
+            Datos datos = new Datos(); // Modelo
+            Controlador ctrl = new Controlador(datos); // Controlador
+            new MenuVista().inicio(ctrl); // Vista
+        }
 
-        ArticuloDAO dao = new MySQLArticuloDAO();
+        void inicio(Controlador ctrl) {
+            Scanner sc = new Scanner(System.in);
+            int opcion;
 
-            System.out.println("\n--- Añadir Artículo ---");
+            do {
+                System.out.println("\n=== MENÚ PRINCIPAL ===");
+                System.out.println("1. Añadir Artículo");
+                System.out.println("2. Mostrar Artículos");
+                System.out.println("3. Añadir Cliente");
+                System.out.println("4. Mostrar Clientes");
+                System.out.println("5. Mostrar Clientes Estándar");
+                System.out.println("6. Mostrar Clientes Premium");
+                System.out.println("7. Añadir Pedido");
+                System.out.println("8. Eliminar Pedido");
+                System.out.println("9. Mostrar Pedidos pendientes");
+                System.out.println("10. Mostrar Pedidos enviados");
+                System.out.println("0. Salir");
+                System.out.print("Elige una opción: ");
 
-            System.out.print("Código: ");
-            String codigo = sc.nextLine();
+                opcion = sc.nextInt();
+                sc.nextLine(); // limpiar buffer
 
-            System.out.print("Descripción: ");
-            String descripcion = sc.nextLine();
-
-            System.out.print("Precio de venta (€): ");
-            double precioVenta = sc.nextDouble();
-
-            System.out.print("Gasto de envío (€): ");
-            double gastoEnvio = sc.nextDouble();
-
-            System.out.print("Tiempo de preparación (minutos): ");
-            int tiempoPrepMin = sc.nextInt();
-            sc.nextLine(); // limpiar el buffer
-
-           // Articulo nuevo = new Articulo(codigo, descripcion, precioVenta, gastoEnvio, tiempoPrepMin);
-            //articulos.add(nuevo);
-
-            try (Connection conn = DBConnection.getConnection()) {
-                conn.setAutoCommit(false); // Iniciar transacción
-
-                try (CallableStatement cs = conn.prepareCall("{CALL agregararticulo(?, ?, ?, ? ,?)}")) {
-                    List<Articulo> articulos = dao.obtenerTodos();
-                    cs.setString(1, codigo);      // 1. Email del cliente
-                    cs.setString(2, descripcion);    // 2. Código del artículo
-                    cs.setDouble(3, precioVenta);                   // 3. Cantidad
-                    cs.setDouble(4, gastoEnvio);         // 4. Fecha entrega (formato yyyy-MM-dd HH:mm:ss)
-                    cs.setDouble(5, tiempoPrepMin);
-
-                    cs.executeUpdate();
-                    conn.commit();
-                    System.out.println("articulo creado correctamente.");
-
-
-                } catch (SQLException e) {
-                    conn.rollback(); // Revertir si falla
-                    System.err.println("Error al crear el articulo: " + e.getMessage());
-                    e.printStackTrace();
+                switch (opcion) {
+                    case 1 -> anadirArticulo(ctrl, sc);
+                    case 2 -> mostrarArticulos(ctrl);
+                    case 3 -> anadirCliente(ctrl, sc);
+                    case 4 -> mostrarClientes(ctrl);
+                    /*case 5 -> mostrarClientesEstandar(ctrl);
+                    case 6 -> mostrarClientesPremium(ctrl);
+                    case 7 -> anadirPedido(ctrl, sc);
+                    case 8 -> eliminarPedido(ctrl, sc);
+                    case 9 -> mostrarPedidosPendientes(ctrl);
+                    case 10 -> mostrarPedidosEnviados(ctrl);
+                    case 0 -> System.out.println("Programa finalizado.");
+                   */ default -> System.out.println("Opción no válida.");
                 }
 
-            } catch (SQLException e) {
-                System.err.println("Error al conectar con la BD: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } while (opcion != 0);
+
+            sc.close();
+        }
+
+
+    private void anadirArticulo(Controlador ctrl, Scanner sc) {
+        System.out.println("\n--- Añadir Artículo ---");
+
+        System.out.print("Código: ");
+        String codigo = sc.nextLine();
+
+        System.out.print("Descripción: ");
+        String descripcion = sc.nextLine();
+
+        System.out.print("Precio de venta (€): ");
+        double precioVenta = sc.nextDouble();
+
+        System.out.print("Gasto de envío (€): ");
+        double gastoEnvio = sc.nextDouble();
+
+        System.out.print("Tiempo de preparación (minutos): ");
+        int tiempoPrepMin = sc.nextInt();
+        sc.nextLine(); // limpiar buffer
+
+        // Llamamos al controlador con los datos
+        ctrl.anadirArticulo(codigo, descripcion, precioVenta, gastoEnvio, tiempoPrepMin);
     }
 
-    private void mostrarArticulos() {
-        ArticuloDAO dao = new MySQLArticuloDAO();
+    private void mostrarArticulos(Controlador ctrl) {
         try {
-        System.out.println("\n--- Lista de Artículos ---");
-            List<Articulo> articulos = dao.obtenerTodos();
+            System.out.println("\n--- Lista de Artículos ---");
+            List<Articulo> articulos = ctrl.obtenerTodosArticulos();
             for (Articulo art : articulos) {
                 System.out.println(
                         art.getCodigo() + " | " +
@@ -182,17 +202,15 @@ public class MenuVista {
                                 art.getTiempoPrepMin() + " min"
                 );
             }
-
         } catch (SQLException e) {
+            System.err.println("Error al obtener los artículos: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void anadirCliente(Scanner sc) {
+
+    private void anadirCliente(Controlador ctrl,Scanner sc) {
         System.out.println("\n--- Añadir Cliente ---");
-
-        ClienteDAO dao = new MySQLClienteDAO();
-
 
         System.out.print("Nombre: ");
         String nombre = sc.nextLine();
@@ -210,55 +228,25 @@ public class MenuVista {
         int tipo = sc.nextInt();
         sc.nextLine(); // limpiar buffer
 
-        // Convertir a string según el tipo
         String tipoStr = (tipo == 2) ? "Premium" : "Estándar";
 
-
-
-        try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false); // Iniciar transacción
-
-            try (CallableStatement cs = conn.prepareCall("{CALL agregarCliente(?, ?, ?, ? ,?)}")) {
-                List<Cliente> articulos = dao.obtenerTodos();
-                cs.setString(1, nombre);      // 1. Email del cliente
-                cs.setString(2, domicilio);    // 2. Código del artículo
-                cs.setString(3, nif);                   // 3. Cantidad
-                cs.setString(4, email);         // 4. Fecha entrega (formato yyyy-MM-dd HH:mm:ss)
-                cs.setString(5, tipoStr);
-
-                cs.executeUpdate();
-                conn.commit();
-                System.out.println("articulo creado correctamente.");
-
-
-            } catch (SQLException e) {
-                conn.rollback(); // Revertir si falla
-                System.err.println("Error al crear el cliente: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error al conectar con la BD: " + e.getMessage());
-            e.printStackTrace();
-        }
+        // Llamada al controlador
+        ctrl.anadirCliente(nombre, domicilio, nif, email, tipoStr);
     }
-
-    private void mostrarClientes() {
-
+    private void mostrarClientes(Controlador ctrl) {
         System.out.println("\n--- Lista de Clientes ---");
 
-        ClienteDAO dao = new MySQLClienteDAO();
-
         try {
-            List<Cliente> clientes = dao.obtenerTodos();
+            List<Cliente> clientes = ctrl.obtenerTodosClientes();
 
-                System.out.println("=== CLIENTES EN BBDD ===");
-                for (Cliente c : clientes) {
-                    System.out.println(c.getNombre() + " - " + c.getEmail() + " _ " + c.getTipo());
-                }
-        } catch (SQLException e){
-                e.printStackTrace();
-                }
+            System.out.println("=== CLIENTES EN BBDD ===");
+            for (Cliente c : clientes) {
+                System.out.println(c.getNombre() + " - " + c.getEmail() + " _ " + c.getTipo());
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener los clientes: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void mostrarClientesEstandar() {
@@ -344,7 +332,7 @@ public class MenuVista {
         }
 */
         //imprimimos articulos para elejir un codigo
-        mostrarArticulos();
+        /*mostrarArticulos(Controlador);*/
 
         // Buscar artículo por código
         ArticuloDAO dao1 = new MySQLArticuloDAO();
