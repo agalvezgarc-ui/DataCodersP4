@@ -150,14 +150,14 @@ import java.util.Scanner;
                     case 2 -> mostrarArticulos(ctrl);
                     case 3 -> anadirCliente(ctrl, sc);
                     case 4 -> mostrarClientes(ctrl);
-                    /*case 5 -> mostrarClientesEstandar(ctrl);
+                    case 5 -> mostrarClientesEstandar(ctrl);
                     case 6 -> mostrarClientesPremium(ctrl);
-                    case 7 -> anadirPedido(ctrl, sc);
-                    case 8 -> eliminarPedido(ctrl, sc);
-                    case 9 -> mostrarPedidosPendientes(ctrl);
-                    case 10 -> mostrarPedidosEnviados(ctrl);
+                    case 7 -> anadirPedido(sc, ctrl);
+                    case 8 -> eliminarPedido(sc, ctrl);
+                    case 9 -> mostrarPedidosPendientes(sc,ctrl);
+                    case 10 -> mostrarPedidosEnviados(sc,ctrl);
                     case 0 -> System.out.println("Programa finalizado.");
-                   */ default -> System.out.println("Opción no válida.");
+                    default -> System.out.println("Opción no válida.");
                 }
 
             } while (opcion != 0);
@@ -249,212 +249,108 @@ import java.util.Scanner;
         }
     }
 
-    private void mostrarClientesEstandar() {
+    private void mostrarClientesEstandar(Controlador ctrl) {
         System.out.println("\n--- Clientes Estándar ---");
-        ClienteDAO dao = new MySQLClienteDAO();
+
         try {
-            List<Cliente> clientes = dao.obtenerEstandar();
+            List<Cliente> clientes = ctrl.obtenerClientesEstandar();
+
+            System.out.println("=== CLIENTES ESTÁNDAR EN BBDD ===");
             for (Cliente c : clientes) {
-                if (c instanceof ClienteEstandar) {
-                    System.out.println(c);
-                }
+                System.out.println(c.getNombre() + " - " + c.getEmail() + " - " + c.getTipo());
             }
+
         } catch (SQLException e) {
+            System.err.println("Error al obtener los clientes estándar: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
-    private void mostrarClientesPremium() {
+    private void mostrarClientesPremium(Controlador ctrl) {
         System.out.println("\n--- Clientes Premium ---");
-        ClienteDAO dao = new MySQLClienteDAO();
-        try {
-            List<Cliente> clientes = dao.obtenerPremium();
 
-            System.out.println("=== CLIENTES EN BBDD ===");
+        try {
+            List<Cliente> clientes = ctrl.obtenerClientesPremium();
+
+            System.out.println("=== CLIENTES PREMIUM EN BBDD ===");
 
             for (Cliente c : clientes) {
-                System.out.println(c.getNombre() + " - " + c.getEmail() + " _ " + c.getTipo());
+                System.out.println(
+                        c.getNombre() + " - " +
+                                c.getEmail() + " _ " +
+                                c.getTipo()
+                );
             }
 
         } catch (SQLException e) {
+            System.err.println("Error al obtener los clientes premium: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
 
-    private void anadirPedido(Scanner sc)
-            throws ClienteNoEncontradoException, ArticuloNoDisponibleException {
-        ClienteDAO dao = new MySQLClienteDAO();
-        //declaramos articulo para evitar eror resolve
-        Articulo articulo = null;
-        Cliente cliente = null;
-        PedidoDAO dao3 = new MySQLPedidoDAO();
+    private void anadirPedido(Scanner sc, Controlador ctrl) {
         System.out.println("\n--- Añadir Pedido ---");
 
-        //busca por email
         System.out.print("Email del cliente: ");
         String email = sc.nextLine();
 
-        try {
-            cliente = dao.buscarPorEmail(email);
+        System.out.print("Código del artículo: ");
+        String codigo = sc.nextLine();
 
-            if (cliente != null) {
-                System.out.println("\nCliente encontrado:");
-                System.out.println("Nombre: " + cliente.getNombre());
-                System.out.println("Email: " + cliente.getEmail());
-                System.out.println("Tipo: " + cliente.getTipo());
-            } else {
-                System.out.println(" No existe ningún cliente con ese email.");
-            }
-
-        } catch (SQLException e) {
-            System.err.println(" Error al buscar el cliente: " + e.getMessage());
-        }
-
-        // Cliente
-
-
-       /* Cliente cliente = buscarPorCampo(clientes, Cliente::getEmail, email);
-        if (cliente == null) {
-            System.out.println("No existe el cliente con ese email.");
-            System.out.print("¿Deseas añadirlo ahora? (s/n): ");
-            String respuesta = sc.nextLine();
-            if (respuesta.equalsIgnoreCase("s")) {
-                anadirCliente(sc);
-                cliente = buscarPorCampo(clientes, Cliente::getEmail, email);
-                if (cliente == null) {
-                    throw new ClienteNoEncontradoException("No se pudo crear/encontrar el cliente: " + email);
-                }
-            } else {
-                throw new ClienteNoEncontradoException("Pedido cancelado: cliente no existe.");
-            }
-        }
-*/
-        //imprimimos articulos para elejir un codigo
-        /*mostrarArticulos(Controlador);*/
-
-        // Buscar artículo por código
-        ArticuloDAO dao1 = new MySQLArticuloDAO();
-        System.out.print("Código del artículo a comprar: ");
-        String codigo = sc.nextLine().trim();
-        try {
-            articulo = dao1.buscarPorCodigo(codigo);
-
-            if (articulo != null) {
-                System.out.print("articulo elejido: ");
-                    System.out.println(
-                            articulo.getCodigo() + " | " +
-                                    articulo.getDescripcion() + " | " +
-                                    articulo.getPrecioVenta() + " € | envío " +
-                                    articulo.getGastoEnvio() + " € | prep: " +
-                                    articulo.getTiempoPrepMin() + " min"
-                    );
-
-            } else {
-                System.out.println("⚠️ No existe ningún articulo con ese codigo.");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("❌ Error al buscar el articulo: " + e.getMessage());
-        }
-
-        /*Articulo articulo = buscarPorCampo(articulos, Articulo::getCodigo, codigo);
-        if (articulo == null) {
-            throw new ArticuloNoDisponibleException(
-                    "El artículo con código '" + codigo + "' no está disponible o no existe."
-            );
-        }
-*/
-        // Cantidad
         System.out.print("Cantidad: ");
         int cantidad = sc.nextInt();
         sc.nextLine(); // limpiar buffer
 
+        System.out.print("Tiempo de preparación del artículo (minutos): ");
+        int tiempoPreparacion = sc.nextInt();
+        sc.nextLine(); // limpiar buffer
 
-       // Para simplificar, fecha de entrega = ahora + tiempo preparación
-        LocalDateTime fechaEntrega = LocalDateTime.now().plusMinutes(articulo.getTiempoPrepMin());
+        System.out.print("Tiempo de envío (minutos): ");
+        int tiempoEnvio = sc.nextInt();
+        sc.nextLine(); // limpiar buffer
 
-        // Formatear fecha para MySQL
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String fechaEntregaStr = fechaEntrega.format(formatter);
-
-        try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false); // Iniciar transacción
-
-            try (CallableStatement cs = conn.prepareCall("{CALL agregarPedido(?, ?, ?, ?)}")) {
-
-                cs.setString(1, cliente.getEmail());      // 1. Email del cliente
-                cs.setString(2, articulo.getCodigo());    // 2. Código del artículo
-                cs.setInt(3, cantidad);                   // 3. Cantidad
-                cs.setString(4, fechaEntregaStr);         // 4. Fecha entrega (formato yyyy-MM-dd HH:mm:ss)
-
-                cs.executeUpdate();
-                conn.commit();
-                System.out.println("Pedido añadido correctamente.");
-
-
-            } catch (SQLException e) {
-                conn.rollback(); // Revertir si falla
-                System.err.println("Error al crear el pedido: " + e.getMessage());
-                e.printStackTrace();
-            }
-
+        try {
+            ctrl.anadirPedido(email, codigo, cantidad, tiempoPreparacion, tiempoEnvio);
+            System.out.println("✅ Pedido añadido correctamente.");
+        } catch (ClienteNoEncontradoException | ArticuloNoDisponibleException e) {
+            System.err.println("⚠️ " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("Error de conexión a la base de datos: " + e.getMessage());
+            System.err.println("❌ Error en la base de datos: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("❌ Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
-
-        //Pedido nuevo = new Pedido(numeroPedido, cliente, articulo, cantidad,
-               // articulo.getPrecioVenta(), fechaEntrega);
-
-       // pedidos.add(nuevo);
-        /*try {
-            dao3.insertar(nuevo);
-            System.out.println("Pedido añadido correctamente");
-        } catch (SQLException e) {
-            System.err.println(" Error al insertar el pedido: " + e.getMessage());
-        }*/
-
     }
 
 
 
 
-    private void eliminarPedido(Scanner sc) throws PedidoNoCancelableException {
+    private void eliminarPedido(Scanner sc, Controlador ctrl) {
         System.out.println("\n--- Eliminar Pedido ---");
+
         System.out.print("Número de pedido: ");
         String numero = sc.nextLine().trim();
 
-        PedidoDAO dao = new MySQLPedidoDAO();
-
         try {
-            // 1) Buscar el pedido en la BBDD
-            Pedido encontrado = dao.buscarPorNumero(numero);
-
-            if (encontrado == null) {
-                System.out.println("No se ha encontrado ningún pedido con ese número.");
-                return;
-            }
-
-            // 2) Comprobar si ya está enviado
-            if (encontrado.esEnviado()) {
-                throw new PedidoNoCancelableException(
-                        "No se puede eliminar: el pedido ya está enviado."
-                );
-            }
-
-            // 3) Eliminar de la BBDD
-            dao.eliminar(numero);
-            System.out.println("Pedido eliminado correctamente.");
-
+            ctrl.eliminarPedido(numero);
+            System.out.println("✅ Pedido eliminado correctamente.");
+        } catch (PedidoNoCancelableException e) {
+            System.err.println("⚠️ " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("Error al eliminar el pedido: " + e.getMessage());
+            System.err.println("❌ Error en la base de datos: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("❌ Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void mostrarPedidosPendientes(Scanner sc) {
+
+
+
+    private void mostrarPedidosPendientes(Scanner sc, Controlador ctrl) {
         System.out.println("\n--- Pedidos pendientes ---");
         System.out.print("¿Deseas filtrar por cliente? (s/n): ");
         String resp = sc.nextLine().trim();
@@ -465,34 +361,22 @@ import java.util.Scanner;
             emailFiltro = sc.nextLine().trim();
         }
 
-        PedidoDAO dao = new MySQLPedidoDAO();
-
         try {
-            List<Pedido> pedidosBD = dao.obtenerTodos();
+            List<Pedido> pedidos = ctrl.obtenerPedidosPendientes(emailFiltro);
 
-            boolean hayResultados = false;
-
-            for (Pedido p : pedidosBD) {
-                boolean coincideCliente = (emailFiltro == null) ||
-                        p.getCliente().getEmail().equalsIgnoreCase(emailFiltro);
-
-                if (!p.esEnviado() && coincideCliente) {
-                    System.out.println(p);   // usa toString() de Pedido
-                    hayResultados = true;
-                }
-            }
-
-            if (!hayResultados) {
+            if (pedidos.isEmpty()) {
                 System.out.println("No hay pedidos pendientes con ese criterio.");
+            } else {
+                pedidos.forEach(System.out::println); // usa toString() de Pedido
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al obtener los pedidos: " + e.getMessage());
+            System.err.println("❌ Error al obtener los pedidos: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void mostrarPedidosEnviados(Scanner sc) {
+    private void mostrarPedidosEnviados(Scanner sc, Controlador ctrl) {
         System.out.println("\n--- Pedidos enviados ---");
         System.out.print("¿Deseas filtrar por cliente? (s/n): ");
         String resp = sc.nextLine().trim();
@@ -503,29 +387,17 @@ import java.util.Scanner;
             emailFiltro = sc.nextLine().trim();
         }
 
-        PedidoDAO dao = new MySQLPedidoDAO();
-
         try {
-            List<Pedido> pedidosBD = dao.obtenerTodos();
+            List<Pedido> pedidos = ctrl.obtenerPedidosEnviados(emailFiltro);
 
-            boolean hayResultados = false;
-
-            for (Pedido p : pedidosBD) {
-                boolean coincideCliente = (emailFiltro == null) ||
-                        p.getCliente().getEmail().equalsIgnoreCase(emailFiltro);
-
-                if (p.esEnviado() && coincideCliente) {
-                    System.out.println(p);
-                    hayResultados = true;
-                }
-            }
-
-            if (!hayResultados) {
+            if (pedidos.isEmpty()) {
                 System.out.println("No hay pedidos enviados con ese criterio.");
+            } else {
+                pedidos.forEach(System.out::println); // usa toString() de Pedido
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al obtener los pedidos: " + e.getMessage());
+            System.err.println("❌ Error al obtener los pedidos: " + e.getMessage());
             e.printStackTrace();
         }
     }
