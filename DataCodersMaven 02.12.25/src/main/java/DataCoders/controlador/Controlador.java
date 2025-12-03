@@ -4,12 +4,10 @@ package DataCoders.controlador;
 import DataCoders.dao.mysql.MySQLArticuloDAO;
 import DataCoders.dao.mysql.MySQLClienteDAO;
 import DataCoders.dao.mysql.MySQLPedidoDAO;
-import DataCoders.modelo.Cliente;
-import DataCoders.modelo.Datos;
+import DataCoders.modelo.*;
+
 import java.sql.Connection;
 import java.sql.CallableStatement;
-import java.sql.SQLException;
-import DataCoders.modelo.Articulo;
 import java.util.List;
 import DataCoders.util.DBConnection;
 import DataCoders.dao.ClienteDAO;
@@ -21,25 +19,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import DataCoders.dao.PedidoDAO;
 import DataCoders.dao.mysql.MySQLPedidoDAO;
-import DataCoders.modelo.Pedido;
+
 import java.util.stream.Collectors;
-import java.sql.Connection;
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import DataCoders.util.DBConnection;
-import DataCoders.modelo.Cliente;
-import DataCoders.modelo.ClienteEstandar;
-import DataCoders.modelo.ClientePremium;
+import jakarta.persistence.PersistenceException;
 
 public class Controlador {
 
-    // ===== Atributos de la clase =====
+    // ===== Atributos de la clase ===== //AQUÍ TENEMOS QUE LLAMAR A LA INTERFAZ NO A LA IMPLEMENTACIÓN
     private final Datos datos;
-    private final MySQLArticuloDAO articuloDAO;
-    private final MySQLClienteDAO clienteDAO;
-    private final MySQLPedidoDAO pedidoDAO;
-    //private final ClienteDAO clienteDAO;
-
+    private final ArticuloDAO articuloDAO;
+    private final ClienteDAO clienteDAO;
+    private final PedidoDAO pedidoDAO;
 
     // ===== Constructor =====
     public Controlador(Datos datos) {
@@ -50,87 +40,60 @@ public class Controlador {
     }
 
     public void anadirArticulo(String codigo, String descripcion, double precioVenta, double gastoEnvio, int tiempoPrepMin) {
-        try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false);
-
-            try (CallableStatement cs = conn.prepareCall("{CALL agregararticulo(?, ?, ?, ?, ?)}")) {
-
-                cs.setString(1, codigo);
-                cs.setString(2, descripcion);
-                cs.setDouble(3, precioVenta);
-                cs.setDouble(4, gastoEnvio);
-                cs.setInt(5, tiempoPrepMin);
-
-                cs.executeUpdate();
-                conn.commit();
-
-                System.out.println("Artículo creado correctamente.");
-
-            } catch (SQLException e) {
-                conn.rollback();
-                System.err.println("Error al crear el artículo: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error al conectar con la BD: " + e.getMessage());
-            e.printStackTrace();
+        //creamos entidad articulo con los datos de la vista
+        Articulo articulo = new Articulo(
+                codigo,
+                descripcion,
+                precioVenta,
+                gastoEnvio,
+                tiempoPrepMin
+        );
+        try {
+            articuloDAO.insertar(articulo);
+            System.out.println("Artículo creado correctamente.");
+        } catch (jakarta.persistence.EntityExistsException e) {
+            // PK duplicada (código de artículo ya existe)
+            System.err.println("Error: Ya existe un artículo con el código " + codigo);
         }
     }
 
-    public List<Articulo> obtenerTodosArticulos() throws SQLException {
+    public List<Articulo> obtenerTodosArticulos(){
         return articuloDAO.obtenerTodos();
     }
 
-
-    public void anadirCliente(String nombre,
-                              String domicilio,
-                              String nif,
-                              String email,
-                              int tipo,
-                              int cuota) throws SQLException {
-        // tipo: por ejemplo 1 = estándar, 2 = premium
+    public void anadirCliente(String nombre, String domicilio, String nif, String email, String tipoStr) {
         Cliente cliente;
-
-        if (tipo == 2) {
-            // Cliente premium
-            ClientePremium c = new ClientePremium(nif, nombre, domicilio, email);
-
-            // Establecemos la cuota según la lógica de negocio
-            // (puedes usar 'cuota' del parámetro o fijar 0.2 directamente)
-            c.setCuota(cuota); // o c.setCuota(0.2);
-            cliente = c;
-
+        if ("PREMIUM".equalsIgnoreCase(tipoStr) || "Premium".equalsIgnoreCase(tipoStr)) {
+            cliente = new ClientePremium(nif, nombre, domicilio, email);
         } else {
-            // Cliente estándar
-            ClienteEstandar c = new ClienteEstandar(nif, nombre, domicilio, email);
-
-            // Cuota 0 para estándar
-            c.setCuota(cuota); // o c.setCuota(0.0);
-            cliente = c;
+            cliente = new ClienteEstandar(nif, nombre, domicilio, email);
         }
-
-        // Guardamos el cliente usando la capa DAO (JPA/Hibernate por debajo)
-        clienteDAO.insertar(cliente);
+        try{
+            clienteDAO.insertar(cliente);
+            System.out.println("Cliente creado correctamente.");
+        } catch (PersistenceException e){
+            System.err.println("Error al crear el cliente. ");
+            System.err.println("Detalles: " + e.getMessage());
+        }
     }
 
 
     // ===== Método para obtener todos los clientes =====
-    public List<Cliente> obtenerTodosClientes() throws SQLException {
+    public List<Cliente> obtenerTodosClientes(){
         return clienteDAO.obtenerTodos();
     }
 
-    public List<Cliente> obtenerClientesEstandar() throws SQLException {
+    public List<Cliente> obtenerClientesEstandar(){
         return clienteDAO.obtenerEstandar();
     }
 
-    public List<Cliente> obtenerClientesPremium() throws SQLException {
+    public List<Cliente> obtenerClientesPremium(){
         ClienteDAO dao = new MySQLClienteDAO();
         return dao.obtenerPremium();
     }
 
     public void anadirPedido(String emailCliente, String codigoArticulo, int cantidad, int tiempoPrep, int tiempoEnvio)
-            throws ClienteNoEncontradoException, ArticuloNoDisponibleException, SQLException {
+            throws ClienteNoEncontradoException, ArticuloNoDisponibleException{
 
         ClienteDAO clienteDAO = new MySQLClienteDAO();
         ArticuloDAO articuloDAO = new MySQLArticuloDAO();
@@ -156,37 +119,37 @@ public class Controlador {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String fechaEntregaStr = fechaEntrega.format(formatter);
 
-        // Insertar pedido usando procedimiento almacenado
-        try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false);
+        Pedido pedido = new Pedido();
+        pedido.setCliente(cliente);
+        pedido.setArticulo(articulo);
+        pedido.setCantidad(cantidad);
+        pedido.setFechaEntrega(fechaEntrega);
 
-            try (CallableStatement cs = conn.prepareCall("{CALL agregarPedido(?, ?, ?, ?)}")) {
-                cs.setString(1, cliente.getEmail());
-                cs.setString(2, articulo.getCodigo());
-                cs.setInt(3, cantidad);
-                cs.setString(4, fechaEntregaStr);
 
-                cs.executeUpdate();
-                conn.commit();
-
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
-            }
-
+        // 5. Guardar el pedido con JPA/Hibernate
+        try {
+            pedidoDAO.insertar(pedido);
+            System.out.println("Pedido creado correctamente.");
+        } catch (PersistenceException e) {
+            System.err.println("Error al crear el pedido.");
+            System.err.println("Detalles: " + e.getMessage());
         }
     }
 
     public void eliminarPedido(String numeroPedido)
-            throws PedidoNoCancelableException, SQLException {
+            throws PedidoNoCancelableException {
 
-        PedidoDAO dao = new MySQLPedidoDAO(); // tu implementación JPA
-
-        // Llamamos directamente al DAO, que ya maneja la transacción y las excepciones
-        dao.eliminar(numeroPedido);
+        try {
+            pedidoDAO.eliminar(numeroPedido);
+            System.out.println("Pedido eliminado correctamente.");
+        } catch (PersistenceException e) {
+            throw new PedidoNoCancelableException(
+                    "No se pudo cancelar el pedido " + numeroPedido + ": " + e.getMessage()
+            );
+        }
     }
 
-    public List<Pedido> obtenerPedidosPendientes(String emailFiltro) throws SQLException {
+    public List<Pedido> obtenerPedidosPendientes(String emailFiltro){
         PedidoDAO dao = new MySQLPedidoDAO();
         List<Pedido> pedidosBD = dao.obtenerTodos();
 
@@ -196,7 +159,7 @@ public class Controlador {
                 .filter(p -> emailFiltro == null || p.getCliente().getEmail().equalsIgnoreCase(emailFiltro))
                 .collect(Collectors.toList());
     }
-    public List<Pedido> obtenerPedidosEnviados(String emailFiltro) throws SQLException {
+    public List<Pedido> obtenerPedidosEnviados(String emailFiltro){
         PedidoDAO dao = new MySQLPedidoDAO();
         List<Pedido> pedidosBD = dao.obtenerTodos();
 
@@ -207,4 +170,3 @@ public class Controlador {
                 .collect(Collectors.toList());
     }
 }
-
