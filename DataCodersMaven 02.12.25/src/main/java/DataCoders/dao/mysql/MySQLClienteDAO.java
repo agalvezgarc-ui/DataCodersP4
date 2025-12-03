@@ -8,7 +8,6 @@ import DataCoders.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ import java.util.List;
 public class MySQLClienteDAO implements ClienteDAO {
 
     @Override
-    public void insertar(Cliente cliente) throws SQLException {
+    public void insertar(Cliente cliente){
         // Inserta un nuevo cliente en la BD usando JPA
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -39,7 +38,7 @@ public class MySQLClienteDAO implements ClienteDAO {
     }
 
     @Override
-    public Cliente buscarPorEmail(String email) throws SQLException {
+    public Cliente buscarPorEmail(String email){
         // Busca un cliente por su email usando una consulta JPQL
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -62,7 +61,7 @@ public class MySQLClienteDAO implements ClienteDAO {
     }
 
     @Override
-    public List<Cliente> obtenerTodos() throws SQLException {
+    public List<Cliente> obtenerTodos(){
         // Devuelve todos los clientes de la tabla cliente
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -80,7 +79,7 @@ public class MySQLClienteDAO implements ClienteDAO {
         }
     }
 
-    public List<Cliente> obtenerPremium() throws SQLException {
+    public List<Cliente> obtenerPremium(){
         // Devuelve únicamente los clientes de tipo ClientePremium
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -98,7 +97,7 @@ public class MySQLClienteDAO implements ClienteDAO {
         }
     }
 
-    public List<Cliente> obtenerEstandar() throws SQLException {
+    public List<Cliente> obtenerEstandar(){
         // Devuelve únicamente los clientes de tipo ClienteEstandar
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -117,7 +116,7 @@ public class MySQLClienteDAO implements ClienteDAO {
     }
 
     @Override
-    public void actualizar(Cliente cliente) throws SQLException {
+    public void actualizar(Cliente cliente){
         // Actualiza los datos de un cliente existente
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -134,7 +133,7 @@ public class MySQLClienteDAO implements ClienteDAO {
     }
 
     @Override
-    public void eliminarPorEmail(String email) throws SQLException {
+    public void eliminarPorEmail(String email){
         // Elimina un cliente a partir de su email
         EntityManager em = JPAUtil.getEntityManager();
 

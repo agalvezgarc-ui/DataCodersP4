@@ -6,7 +6,6 @@ import DataCoders.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
 public class MySQLArticuloDAO implements ArticuloDAO {
 
     @Override
-    public void insertar(Articulo articulo) throws SQLException {
+    public void insertar(Articulo articulo){
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
@@ -35,7 +34,7 @@ public class MySQLArticuloDAO implements ArticuloDAO {
     }
 
     @Override
-    public Articulo buscarPorCodigo(String codigo) throws SQLException {
+    public Articulo buscarPorCodigo(String codigo){
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
@@ -49,7 +48,7 @@ public class MySQLArticuloDAO implements ArticuloDAO {
     }
 
     @Override
-    public List<Articulo> obtenerTodos() throws SQLException {
+    public List<Articulo> obtenerTodos(){
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
@@ -65,7 +64,7 @@ public class MySQLArticuloDAO implements ArticuloDAO {
     }
 
     @Override
-    public void actualizar(Articulo articulo) throws SQLException {
+    public void actualizar(Articulo articulo){
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
@@ -80,7 +79,7 @@ public class MySQLArticuloDAO implements ArticuloDAO {
     }
 
     @Override
-    public void eliminarPorCodigo(String codigo) throws SQLException {
+    public void eliminarPorCodigo(String codigo){
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
