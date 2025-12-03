@@ -2,8 +2,7 @@
 //No realizado: gestión de Excepciones, Excepciones personalizadas
 //Error con la fecha de entrega al mostrar la lista de pedidos. La muestra como un conjunto de números y signos
 
-package DataCoders.vista;//
-
+package DataCoders.vista;
 import DataCoders.controlador.Controlador;
 import DataCoders.dao.ArticuloDAO;
 import DataCoders.dao.ClienteDAO;
@@ -15,12 +14,8 @@ import DataCoders.excepciones.ArticuloNoDisponibleException;
 import DataCoders.excepciones.ClienteNoEncontradoException;
 import DataCoders.excepciones.PedidoNoCancelableException;
 import DataCoders.modelo.*;
-import DataCoders.util.DBConnection;
 import jakarta.persistence.PersistenceException;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,7 +23,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-c
 /*public class MenuVista {
     // === Almacén en memoria ===
     private final ArrayList<Articulo> articulos = new ArrayList<>();
@@ -118,7 +112,7 @@ c
         sc.close();
     }
 */
-    public class MenuVista {
+public class MenuVista {
 
         public static void main(String[] args) {
             // Silenciar logs de Hibernate
@@ -242,12 +236,16 @@ c
         int cuota = (tipo == 2) ? 20 : 0;   // 2 = Premium - 20, 1 = Estándar - 0
 
         try {
-            // передаём и tipo, и cuota
             ctrl.anadirCliente(nombre, domicilio, nif, email, tipo, cuota);
             System.out.println("Cliente creado correctamente.");
-        } catch (SQLException e) {
-            System.out.println("Error al crear el cliente: " + e.getMessage());
-            e.printStackTrace();
+
+        } catch (jakarta.persistence.PersistenceException e) {
+            System.err.println("Error al guardar el cliente usando Hibernate.");
+            System.err.println("Detalles: " + e.getMessage());
+
+        } catch (Exception e) {
+            System.err.println("Error inesperado.");
+            System.err.println("Detalles: " + e.getMessage());
         }
     }
     private void mostrarClientes(Controlador ctrl) {

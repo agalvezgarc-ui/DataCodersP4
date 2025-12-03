@@ -61,22 +61,26 @@ public class Controlador {
         return articuloDAO.obtenerTodos();
     }
 
-    public void anadirCliente(String nombre, String domicilio, String nif, String email, String tipoStr) {
+    public void anadirCliente(String nombre, String domicilio, String nif, String email, int tipo, int cuota) {
+
         Cliente cliente;
-        if ("PREMIUM".equalsIgnoreCase(tipoStr) || "Premium".equalsIgnoreCase(tipoStr)) {
+
+        // tipo = 1 → Estándar
+        // tipo = 2 → Premium
+        if (tipo == 2) {
             cliente = new ClientePremium(nif, nombre, domicilio, email);
         } else {
             cliente = new ClienteEstandar(nif, nombre, domicilio, email);
         }
-        try{
+
+        try {
             clienteDAO.insertar(cliente);
             System.out.println("Cliente creado correctamente.");
-        } catch (PersistenceException e){
-            System.err.println("Error al crear el cliente. ");
+        } catch (jakarta.persistence.PersistenceException e) {
+            System.err.println("Error al crear el cliente.");
             System.err.println("Detalles: " + e.getMessage());
         }
     }
-
 
     // ===== Método para obtener todos los clientes =====
     public List<Cliente> obtenerTodosClientes(){
