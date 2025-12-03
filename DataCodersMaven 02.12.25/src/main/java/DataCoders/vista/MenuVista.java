@@ -16,6 +16,7 @@ import DataCoders.excepciones.ClienteNoEncontradoException;
 import DataCoders.excepciones.PedidoNoCancelableException;
 import DataCoders.modelo.*;
 import DataCoders.util.DBConnection;
+import jakarta.persistence.PersistenceException;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -25,7 +26,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+c
 /*public class MenuVista {
     // === Almacén en memoria ===
     private final ArrayList<Articulo> articulos = new ArrayList<>();
@@ -118,6 +121,10 @@ import java.util.Scanner;
     public class MenuVista {
 
         public static void main(String[] args) {
+            // Silenciar logs de Hibernate
+            Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+            Logger.getLogger("").setLevel(Level.SEVERE);
+
             Datos datos = new Datos(); // Modelo
             Controlador ctrl = new Controlador(datos); // Controlador
             new MenuVista().inicio(ctrl); // Vista
@@ -202,9 +209,12 @@ import java.util.Scanner;
                                 art.getTiempoPrepMin() + " min"
                 );
             }
-        } catch (SQLException e) {
-            System.err.println("Error al obtener los artículos: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenceException e) {
+            System.err.println("Error al obtener los artículos");
+            System.err.println("Detalles: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error inesperado.");
+            System.err.println("Detalles: " + e.getMessage());
         }
     }
 
@@ -250,9 +260,12 @@ import java.util.Scanner;
             for (Cliente c : clientes) {
                 System.out.println(c.getNombre() + " - " + c.getEmail() + " _ " + c.getTipo());
             }
-        } catch (SQLException e) {
-            System.err.println("Error al obtener los clientes: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenceException e) {
+            System.err.println("Error al obtener los clientes con Hibernate.");
+            System.err.println("Detalles: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error inesperado.");
+            System.err.println("Detalles: " + e.getMessage());
         }
     }
 
@@ -267,9 +280,11 @@ import java.util.Scanner;
                 System.out.println(c.getNombre() + " - " + c.getEmail() + " - " + c.getTipo());
             }
 
-        } catch (SQLException e) {
-            System.err.println("Error al obtener los clientes estándar: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenceException e) {
+            System.err.println("Error al obtener los clientes estándar con Hibernate.");
+            System.err.println("Detalles: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
         }
     }
 
@@ -288,10 +303,11 @@ import java.util.Scanner;
                                 c.getTipo()
                 );
             }
-
-        } catch (SQLException e) {
-            System.err.println("Error al obtener los clientes premium: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenceException e) {
+            System.err.println(" Error al obtener los clientes premium con Hibernate.");
+            System.err.println("Detalles: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
         }
     }
 
@@ -319,15 +335,16 @@ import java.util.Scanner;
 
         try {
             ctrl.anadirPedido(email, codigo, cantidad, tiempoPreparacion, tiempoEnvio);
-            System.out.println("✅ Pedido añadido correctamente.");
+            System.out.println("Pedido añadido correctamente.");
         } catch (ClienteNoEncontradoException | ArticuloNoDisponibleException e) {
-            System.err.println("⚠️ " + e.getMessage());
-        } catch (SQLException e) {
-            System.err.println("❌ Error en la base de datos: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Cliente no encontrado " + e.getMessage());
+
+        } catch (PersistenceException e) {
+            System.err.println("Error en la base de datos");
+            System.err.println("Detalles: " + e.getMessage());
+
         } catch (Exception e) {
-            System.err.println("❌ Error inesperado: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error inesperado: " + e.getMessage());
         }
     }
 
@@ -344,12 +361,14 @@ import java.util.Scanner;
             ctrl.eliminarPedido(numero);
             System.out.println("✅ Pedido eliminado correctamente.");
         } catch (PedidoNoCancelableException e) {
-            System.err.println("⚠️ " + e.getMessage());
-        } catch (SQLException e) {
-            System.err.println("❌ Error en la base de datos: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Pedido no cancelable " + e.getMessage());
+
+        } catch (PersistenceException e) {
+            System.err.println("Error en la base de datosc.");
+            System.err.println("Detalles: " + e.getMessage());
+
         } catch (Exception e) {
-            System.err.println("❌ Error inesperado: " + e.getMessage());
+            System.err.println("Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -377,9 +396,12 @@ import java.util.Scanner;
                 pedidos.forEach(System.out::println); // usa toString() de Pedido
             }
 
-        } catch (SQLException e) {
-            System.err.println("❌ Error al obtener los pedidos: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenceException e) {
+            System.err.println("Error al obtener los pedidos con Hibernate.");
+            System.err.println("Detalles: " + e.getMessage());
+
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
         }
     }
 
@@ -403,9 +425,12 @@ import java.util.Scanner;
                 pedidos.forEach(System.out::println); // usa toString() de Pedido
             }
 
-        } catch (SQLException e) {
-            System.err.println("❌ Error al obtener los pedidos: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenceException e) {
+            System.err.println("Error al obtener los pedidos enviados c.");
+            System.err.println("Detalles: " + e.getMessage());
+
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
         }
     }
 

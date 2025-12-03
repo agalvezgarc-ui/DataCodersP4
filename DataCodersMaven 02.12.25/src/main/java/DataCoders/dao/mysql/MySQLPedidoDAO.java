@@ -6,7 +6,6 @@ import DataCoders.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
 public class MySQLPedidoDAO implements PedidoDAO {
 
     @Override
-    public void insertar(Pedido pedido) throws SQLException {
+    public void insertar(Pedido pedido){
         // Inserta un nuevo pedido en la BD usando JPA.
         // El número de pedido (numero_pedido) se genera automáticamente (IDENTITY).
         EntityManager em = JPAUtil.getEntityManager();
@@ -38,7 +37,7 @@ public class MySQLPedidoDAO implements PedidoDAO {
     }
 
     @Override
-    public Pedido buscarPorNumero(String numeroPedido) throws SQLException {
+    public Pedido buscarPorNumero(String numeroPedido){
         // Busca un pedido por su número (clave primaria).
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -53,7 +52,7 @@ public class MySQLPedidoDAO implements PedidoDAO {
     }
 
     @Override
-    public List<Pedido> obtenerTodos() throws SQLException {
+    public List<Pedido> obtenerTodos(){
         // Devuelve todos los pedidos almacenados en la BD.
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -69,7 +68,7 @@ public class MySQLPedidoDAO implements PedidoDAO {
     }
 
     @Override
-    public void eliminar(String numeroPedido) throws SQLException {
+    public void eliminar(String numeroPedido){
         // Elimina un pedido a partir de su número (clave primaria).
         EntityManager em = JPAUtil.getEntityManager();
 

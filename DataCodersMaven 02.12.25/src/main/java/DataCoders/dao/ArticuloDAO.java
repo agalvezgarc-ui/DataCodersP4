@@ -16,13 +16,13 @@ import java.util.List;
 
 public interface ArticuloDAO {
 
-    void insertar(Articulo articulo) throws SQLException;
+    void insertar(Articulo articulo);
 
-    Articulo buscarPorCodigo(String codigo) throws SQLException;
+    Articulo buscarPorCodigo(String codigo);
 
-    List<Articulo> obtenerTodos() throws SQLException;
+    List<Articulo> obtenerTodos();
 
-    void actualizar(Articulo articulo) throws SQLException;
+    void actualizar(Articulo articulo);
 
-    void eliminarPorCodigo(String codigo) throws SQLException;
+    void eliminarPorCodigo(String codigo);
 }
