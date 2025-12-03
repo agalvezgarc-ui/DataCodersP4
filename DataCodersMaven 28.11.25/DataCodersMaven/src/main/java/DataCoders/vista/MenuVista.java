@@ -26,6 +26,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*public class MenuVista {
     // === Almacén en memoria ===
@@ -119,6 +121,10 @@ import java.util.Scanner;
     public class MenuVista {
 
         public static void main(String[] args) {
+            // Silenciar logs de Hibernate
+            Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+            Logger.getLogger("").setLevel(Level.SEVERE);
+
             Datos datos = new Datos(); // Modelo
             Controlador ctrl = new Controlador(datos); // Controlador
             new MenuVista().inicio(ctrl); // Vista
