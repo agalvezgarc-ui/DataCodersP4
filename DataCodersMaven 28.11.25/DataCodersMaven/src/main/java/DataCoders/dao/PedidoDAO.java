@@ -11,16 +11,15 @@ package DataCoders.dao;
 
 import DataCoders.modelo.Pedido;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface PedidoDAO {
 
-    void insertar(Pedido pedido) throws SQLException;
+    void insertar(Pedido pedido);
 
-    Pedido buscarPorNumero(String numeroPedido) throws SQLException;
+    Pedido buscarPorNumero(String numeroPedido);
 
-    List<Pedido> obtenerTodos() throws SQLException;
+    List<Pedido> obtenerTodos();
 
-    void eliminar(String numeroPedido) throws SQLException;
+    void eliminar(String numeroPedido);
 }

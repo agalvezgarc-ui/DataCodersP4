@@ -11,27 +11,26 @@ package DataCoders.dao;
 
 import DataCoders.modelo.Cliente;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface ClienteDAO {
 
     // INSERT
-    void insertar(Cliente cliente) throws SQLException;
+    void insertar(Cliente cliente);
 
     // SELECT por email
-    Cliente buscarPorEmail(String email) throws SQLException;
+    Cliente buscarPorEmail(String email);
 
     // SELECT todos
-    List<Cliente> obtenerTodos() throws SQLException;
+    List<Cliente> obtenerTodos();
 
 
-    List<Cliente> obtenerPremium() throws SQLException;
+    List<Cliente> obtenerPremium();
 
-    List<Cliente> obtenerEstandar() throws SQLException;
+    List<Cliente> obtenerEstandar();
     // UPDATE
-    void actualizar(Cliente cliente) throws SQLException;
+    void actualizar(Cliente cliente);
 
     // DELETE por email
-    void eliminarPorEmail(String email) throws SQLException;
+    void eliminarPorEmail(String email);
 }
