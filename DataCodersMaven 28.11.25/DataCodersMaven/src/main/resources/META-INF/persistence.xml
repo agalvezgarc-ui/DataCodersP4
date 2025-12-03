@@ -7,7 +7,8 @@
 
     <persistence-unit name="DataCodersPU">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
+        <!-- Entidades gestionadas -->
+        <class>DataCoders.modelo.Articulo</class>
         <properties>
             <!-- Настройки подключения к MySQL -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -15,9 +16,9 @@
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="1234"/>
 
-            <!-- Можно включить лог SQL в консоль -->
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <!-- Mostrar SQL por consola (poner a true si quieres verlo) -->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
 
             <!-- Что делать со схемой: для начала лучше validate -->
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
