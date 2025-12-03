@@ -1,85 +1,117 @@
 package DataCoders.modelo;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "cliente")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-        name = "tipo",
-        discriminatorType = DiscriminatorType.STRING,
-        length = 20
-)
-public abstract class Cliente {
+@Table(name = "pedido")
+public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cliente")   // PK autoincremental en la BD
-    private Integer idCliente;
+    @Column(name = "numero_pedido")
+    private Integer numeroPedido;
 
-    @Column(name = "nif", unique = true)
-    private String nif;
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", nullable = false)
+    private Cliente cliente;
 
-    @Column(name = "nombre")
-    private String nombre;
+    @ManyToOne
+    @JoinColumn(name = "codigo_articulo", referencedColumnName = "codigo", nullable = false)
+    private Articulo articulo;
 
-    @Column(name = "domicilio")
-    private String domicilio;
+    @Column(name = "cantidad")
+    private int cantidad;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "precio_unitario")
+    private double precioUnitario;
 
-    @Column(name = "cuota")
-    private double cuota;
+    @Column(name = "fecha_entrega")
+    private LocalDateTime fechaEntrega;
 
-    // Constructor vacío requerido por JPA
-    public Cliente() {
+    // Constructor vacío
+    public Pedido() {}
+
+    public Pedido(Cliente cliente, Articulo articulo, int cantidad,
+                  double precioUnitario, LocalDateTime fechaEntrega) {
+        this.cliente = cliente;
+        this.articulo = articulo;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+        this.fechaEntrega = fechaEntrega;
     }
 
-    // Constructor de conveniencia (no incluimos idCliente porque lo genera la BD)
-    public Cliente(String nif, String nombre, String domicilio, String email) {
-        this.nif = nif;
-        this.nombre = nombre;
-        this.domicilio = domicilio;
-        this.email = email;
+    // ==========================
+    // Getters y Setters
+    // ==========================
+
+    public Integer getNumeroPedido() { return numeroPedido; }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Articulo getArticulo() { return articulo; }
+    public void setArticulo(Articulo articulo) { this.articulo = articulo; }
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public LocalDateTime getFechaEntrega() { return fechaEntrega; }
+    public void setFechaEntrega(LocalDateTime fechaEntrega) { this.fechaEntrega = fechaEntrega; }
+
+    // ==========================
+    // Lógica de negocio
+    // ==========================
+
+    public double calcularImporte() {
+        return (precioUnitario * cantidad) + calcularGastoEnvio();
     }
 
-    // Getter solo lectura para idCliente (lo asigna JPA)
-    public Integer getIdCliente() {
-        return idCliente;
+    public double calcularGastoEnvio() {
+        double descuento = cliente.getDescuentoEnvio();
+        double base = articulo.getGastoEnvio();
+        return base * (1 - descuento);
     }
 
-    // Getters y setters
-    public String getNif() { return nif; }
-    public void setNif(String nif) { this.nif = nif; }
+    public boolean esEnviado() {
+        return fechaEntrega != null &&
+                LocalDateTime.now().isAfter(fechaEntrega);
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public boolean esCancelable() {
+        return !esEnviado();
+    }
 
-    public String getDomicilio() { return domicilio; }
-    public void setDomicilio(String domicilio) { this.domicilio = domicilio; }
+    // ==========================
+    // Métodos utilitarios para añadir/eliminar pedido
+    // ==========================
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void registrarEnCliente() {
+        if (cliente != null) {
+            if (cliente instanceof ClienteConPedidos) {
+                ((ClienteConPedidos) cliente).getPedidos().add(this);
+            }
+        }
+    }
 
-    // Getter y setter añadidos para exponer la cuota como atributo persistente.
-    // Antes el tipo de cliente (estándar/premium) se gestionaba solo con lógica interna,
-    // pero al usar JPA necesitamos poder leer y modificar la cuota desde otros
-    // componentes (DAO/servicio) y mantenerla sincronizada con la columna 'cuota' de la BD.
-    public double getCuota() { return cuota; }
-    public void setCuota(double cuota) { this.cuota = cuota; }
+    public void eliminarDeCliente() {
+        if (cliente != null) {
+            if (cliente instanceof ClienteConPedidos) {
+                ((ClienteConPedidos) cliente).getPedidos().remove(this);
+            }
+        }
+    }
 
     @Override
     public String toString() {
-        return "Cliente{" +
-                "nif='" + nif + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", domicilio='" + domicilio + '\'' +
-                ", email='" + email + '\'' +
+        return "Pedido {" +
+                "numero=" + numeroPedido +
+                ", cliente=" + (cliente != null ? cliente.getEmail() : "null") +
+                ", articulo=" + (articulo != null ? articulo.getCodigo() : "null") +
+                ", cantidad=" + cantidad +
+                ", precioUnitario=" + precioUnitario +
+                ", fechaEntrega=" + fechaEntrega +
                 '}';
     }
-
-    public abstract double getDescuentoEnvio();// Este método no tiene cuerpo aquí porque cada tipo de cliente (estándar o premium) tendrá su propio descuento.
-    public abstract String getTipo();
-
 }
