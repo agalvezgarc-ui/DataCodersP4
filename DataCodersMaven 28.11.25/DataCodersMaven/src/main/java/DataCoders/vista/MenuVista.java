@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+c
 /*public class MenuVista {
     // === Almacén en memoria ===
     private final ArrayList<Articulo> articulos = new ArrayList<>();
