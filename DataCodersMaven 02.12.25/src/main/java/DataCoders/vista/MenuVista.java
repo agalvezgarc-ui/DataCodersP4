@@ -323,6 +323,7 @@ public class MenuVista {
         int cantidad = sc.nextInt();
         sc.nextLine(); // limpiar buffer
 
+
         System.out.print("Tiempo de preparación del artículo (minutos): ");
         int tiempoPreparacion = sc.nextInt();
         sc.nextLine(); // limpiar buffer

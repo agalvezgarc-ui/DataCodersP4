@@ -4,9 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.DiscriminatorValue;
 
 @Entity
-@DiscriminatorValue("Estandar")
+@DiscriminatorValue("ESTANDAR")
 public class ClienteEstandar extends ClienteConPedidos {
 
+    // =========================
+    // Constructores
+    // =========================
     public ClienteEstandar() {
         super();
         setCuota(0.0); // cuota estándar
@@ -14,12 +17,15 @@ public class ClienteEstandar extends ClienteConPedidos {
 
     public ClienteEstandar(String nif, String nombre, String domicilio, String email) {
         super(nif, nombre, domicilio, email);
-        setCuota(0.0);
+        setCuota(0.0); // cuota estándar
     }
 
+    // =========================
+    // Métodos sobrescritos
+    // =========================
     @Override
     public double getDescuentoEnvio() {
-        return 0.0; // sin descuento
+        return 0.0; // los clientes estándar no tienen descuento
     }
 
     @Override

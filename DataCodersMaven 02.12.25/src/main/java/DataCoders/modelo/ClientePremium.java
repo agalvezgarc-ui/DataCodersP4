@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.DiscriminatorValue;
 
 @Entity
-@DiscriminatorValue("Premium")
+@DiscriminatorValue("PREMIUM")
 public class ClientePremium extends ClienteConPedidos {
 
     public ClientePremium() {

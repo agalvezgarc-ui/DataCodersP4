@@ -1,12 +1,16 @@
 package DataCoders.modelo;
 
 import jakarta.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo")
 @Table(name = "cliente")
 public abstract class Cliente {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +28,9 @@ public abstract class Cliente {
 
     @Column(name = "email")
     private String email;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pedido> pedidos = new ArrayList<>();
 
     // --- Constructor vacío ---
     public Cliente() {}
@@ -53,4 +60,8 @@ public abstract class Cliente {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
 }

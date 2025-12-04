@@ -2,6 +2,9 @@ package DataCoders.modelo;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Table(name = "pedido")
@@ -126,14 +129,12 @@ public class Pedido {
         }
     }
 
-    /**
-     * Eliminar un pedido desde el cliente (si existe).
-     */
     public void eliminarDeCliente() {
         if (cliente != null) {
             cliente.getPedidos().remove(this);
         }
     }
+
 
     @Override
     public String toString() {
