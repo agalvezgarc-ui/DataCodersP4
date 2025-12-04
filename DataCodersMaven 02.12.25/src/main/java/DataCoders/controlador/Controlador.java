@@ -127,6 +127,7 @@ public class Controlador {
         pedido.setCliente(cliente);
         pedido.setArticulo(articulo);
         pedido.setCantidad(cantidad);
+        pedido.setPrecioUnitario( articulo.getPrecioVenta() );
         pedido.setFechaEntrega(fechaEntrega);
 
 
