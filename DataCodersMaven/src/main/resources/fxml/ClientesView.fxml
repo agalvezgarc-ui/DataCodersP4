@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="DataCoders.vistaFX.ClientesViewController">
+
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10;">
+            <Button text="Volver" onAction="#goBack"/>
+            <Button text="Recargar" onAction="#reload"/>
+            <Button text="Todos" onAction="#filtrarTodos"/>
+            <Button text="Estandar" onAction="#filtrarEstandar"/>
+            <Button text="Premium" onAction="#filtrarPremium"/>
+            <Button text="Añadir" onAction="#anadirCliente"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tblClientes">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="colNif" text="NIF" prefWidth="120"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="120"/>
+                <TableColumn fx:id="colEmail" text="Email" prefWidth="240"/>
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>
