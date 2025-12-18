@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="DataCoders-Producto-5" />
+        <module name="DataCoders Producto 4" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="DataCoders-Producto-4" target="17" />
+      <module name="DataCoders" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

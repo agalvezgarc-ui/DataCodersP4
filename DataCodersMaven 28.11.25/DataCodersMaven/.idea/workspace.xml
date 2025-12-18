@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c3560460-0733-4a82-b1ca-0d24ba3aacaf" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="360lns1HjinJ7wYq8WH1eNyBkvd" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MenuVista.executor": "Run",
+    "Application.TestClienteDAO.executor": "Run",
+    "Application.TestClienteJPA.executor": "Run",
+    "Application.TestJPA.executor": "Run",
+    "Application.TestPedidoJPA.executor": "Run",
+    "JUnit.TestArticuloJPA.executor": "Run",
+    "JUnit.TestArticuloJPA.testBuscarArticulo.executor": "Run",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/annar/IdeaProjects/DataCodersMaven/src/main/java/DataCoders/modelo",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.35624394",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\DataCoders\modelo" />
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\modelo" />
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\lib" />
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\excepciones" />
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\dao\mysql" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\DataCoders\controlador" />
+      <recent name="C:\Users\annar\IdeaProjects\DataCodersMaven\src\main\java\DataCoders\vista" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="DataCoders" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="DataCoders.vista" />
+      <recent name="DataCoders.util" />
+      <recent name="DataCoders.servicio" />
+      <recent name="DataCoders.dao" />
+      <recent name="vista" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MenuVista">
+    <configuration name="MenuVista" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="DataCoders.vista.MenuVista" />
+      <module name="DataCoders Producto 4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="DataCoders.vista.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestClienteDAO" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="DataCoders.TestClienteDAO" />
+      <module name="DataCoders Producto 4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="DataCoders.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestClienteJPA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="DataCoders.TestClienteJPA" />
+      <module name="DataCoders Producto 4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="DataCoders.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestJPA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="DataCoders.TestJPA" />
+      <module name="DataCoders Producto 4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="DataCoders.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestPedidoJPA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="DataCoders.TestPedidoJPA" />
+      <module name="DataCoders Producto 4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="DataCoders.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MenuVista" />
+        <item itemvalue="Application.TestPedidoJPA" />
+        <item itemvalue="Application.TestJPA" />
+        <item itemvalue="Application.TestClienteDAO" />
+        <item itemvalue="Application.TestClienteJPA" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c3560460-0733-4a82-b1ca-0d24ba3aacaf" name="Changes" comment="" />
+      <created>1764151541843</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764151541843</updated>
+      <workItem from="1764151542837" duration="2049000" />
+      <workItem from="1764153841744" duration="6021000" />
+      <workItem from="1764167751640" duration="114000" />
+      <workItem from="1764241531545" duration="148000" />
+      <workItem from="1764241704054" duration="25000" />
+      <workItem from="1764241754162" duration="560000" />
+      <workItem from="1764242328976" duration="225000" />
+      <workItem from="1764242570926" duration="74000" />
+      <workItem from="1764242674493" duration="3716000" />
+      <workItem from="1764246454492" duration="6217000" />
+      <workItem from="1764322273029" duration="6108000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
